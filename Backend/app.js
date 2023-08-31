@@ -32,6 +32,14 @@ app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, '../frontend/index.html'));
 });
 
+app.get('/login', (req, res) => {
+  res.sendFile(path.join(__dirname, '../frontend/login.html'));
+});
+
+// app.post('/login', (req, res) => {
+// });
+
+
 // test(
 //   app.get('/', (req, res) => {
 //     const message = "Bienvenue sur notre page d'accueil générée côté serveur!";
