@@ -30,10 +30,15 @@ document.addEventListener('DOMContentLoaded', function () {
                 filtreHR.push(work);
             }
         })
+        const filtreAppartement = works.filter(work => {
+            work.categoryId === 2;
+        })
+
+
         console.log(filtreObjets);
         console.log(filtreApt);
         console.log(filtreHR);
-        
+
         const boutonFiltreObjets = document.getElementById('objets')
         const boutonFiltreApt = document.getElementById('appartements')
         const boutonFiltreHR = document.getElementById('hotels-restaurants')
@@ -44,86 +49,52 @@ document.addEventListener('DOMContentLoaded', function () {
         works.forEach(work => {
             const figureElement = document.createElement("figure");
             const imageElement = document.createElement("img");
-            // imageElement.src = work.imageURL; // Assuming your work object has an imageURL property
-            imageElement.src = "assets/images/abajour-tahina.png";
+            imageElement.src = work.imageUrl; // Assuming your work object has an imageURL property
+            // imageElement.src = "assets/images/abajour-tahina.png";
             const titleElement = document.createElement("figcaption");
             titleElement.textContent = work.title;
 
             sectionGallery.appendChild(figureElement);
             figureElement.appendChild(imageElement);
             figureElement.appendChild(titleElement);
+
+            console.log(work.imageUrl);
         });
 
         //button qui supprime tous les travaux et les remplacent par une catégorie
         boutonFiltreObjets.addEventListener('click', function () {
-            while (sectionGallery.firstChild) {
-                sectionGallery.removeChild(sectionGallery.firstChild);
-            }
-            filtreObjets.forEach(work => {
-                const figureElement = document.createElement("figure");
-                const imageElement = document.createElement("img");
-                // imageElement.src = work.imageURL; // Assuming your work object has an imageURL property
-                imageElement.src = "assets/images/abajour-tahina.png";
-                const titleElement = document.createElement("figcaption");
-                titleElement.textContent = work.title;
-    
-                sectionGallery.appendChild(figureElement);
-                figureElement.appendChild(imageElement);
-                figureElement.appendChild(titleElement);
-            });
+            affichageTravaux(filtreObjets);
         })
         boutonFiltreApt.addEventListener('click', function () {
-            while (sectionGallery.firstChild) {
-                sectionGallery.removeChild(sectionGallery.firstChild);
-            }
-            filtreApt.forEach(work => {
-                const figureElement = document.createElement("figure");
-                const imageElement = document.createElement("img");
-                // imageElement.src = work.imageURL; // Assuming your work object has an imageURL property
-                imageElement.src = "assets/images/abajour-tahina.png";
-                const titleElement = document.createElement("figcaption");
-                titleElement.textContent = work.title;
-    
-                sectionGallery.appendChild(figureElement);
-                figureElement.appendChild(imageElement);
-                figureElement.appendChild(titleElement);
-            });
+            affichageTravaux(filtreApt);
         })
         boutonFiltreHR.addEventListener('click', function () {
-            while (sectionGallery.firstChild) {
-                sectionGallery.removeChild(sectionGallery.firstChild);
-            }
-            filtreHR.forEach(work => {
-                const figureElement = document.createElement("figure");
-                const imageElement = document.createElement("img");
-                // imageElement.src = work.imageURL; // Assuming your work object has an imageURL property
-                imageElement.src = "assets/images/abajour-tahina.png";
-                const titleElement = document.createElement("figcaption");
-                titleElement.textContent = work.title;
-    
-                sectionGallery.appendChild(figureElement);
-                figureElement.appendChild(imageElement);
-                figureElement.appendChild(titleElement);
-            });
+            affichageTravaux(filtreHR);
         })
         boutonTous.addEventListener('click', function () {
+            affichageTravaux(works);
+        })
+
+        function affichageTravaux(list) {
             while (sectionGallery.firstChild) {
                 sectionGallery.removeChild(sectionGallery.firstChild);
             }
-            works.forEach(work => {
+            list.forEach(work => {
                 const figureElement = document.createElement("figure");
                 const imageElement = document.createElement("img");
                 // imageElement.src = work.imageURL; // Assuming your work object has an imageURL property
                 imageElement.src = "assets/images/abajour-tahina.png";
                 const titleElement = document.createElement("figcaption");
                 titleElement.textContent = work.title;
-    
+
                 sectionGallery.appendChild(figureElement);
                 figureElement.appendChild(imageElement);
                 figureElement.appendChild(titleElement);
             });
-        })
+        }
+
     });
+
 });
 
 

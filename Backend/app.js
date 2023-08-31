@@ -31,7 +31,6 @@ app.use(express.static(path.join(__dirname, '../frontend')))
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, '../frontend/index.html'));
 });
-
 // test(
 //   app.get('/', (req, res) => {
 //     const message = "Bienvenue sur notre page d'accueil générée côté serveur!";
