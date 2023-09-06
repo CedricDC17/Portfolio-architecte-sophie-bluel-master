@@ -45,6 +45,21 @@ document.addEventListener('DOMContentLoaded', function () {
             //récupère la div classe gallery
             const sectionGallery = document.querySelector(".gallery");
 
+            //afficher la galerie dans la modale 
+            const modalGallery = document.getElementById('modal-gallery');
+            works.forEach(function (work) {
+                const figureElement = document.createElement("figure");
+                const imageElement = document.createElement("img");
+                imageElement.classList.add('modal-img')
+                imageElement.src = work.imageUrl;
+                const titleElement = document.createElement("figcaption");
+                titleElement.textContent = "éditer";
+
+                modalGallery.appendChild(figureElement);
+                figureElement.appendChild(imageElement);
+                figureElement.appendChild(titleElement);
+            })
+
             //afficher tous les travaux au chargement
             affichageTravaux(works);
 
@@ -61,6 +76,10 @@ document.addEventListener('DOMContentLoaded', function () {
             boutonTous.addEventListener('click', function () {
                 affichageTravaux(works);
             })
+
+
+
+
 
             //supprime tous les travaux et les remplacent par une catégorie en paramètre
             function affichageTravaux(list) {
@@ -111,8 +130,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
         if (userID === "1") {
             logBtn.textContent = "Logout";
-
-
             // Créez un élément div avec la classe "admin-bar"
             // Créez un élément div à l'intérieur de "admin-bar"
             // Créez une icône <i> avec la classe "fa-solid fa-pen-to-square"
@@ -126,7 +143,6 @@ document.addEventListener('DOMContentLoaded', function () {
             const span = document.createElement('span');
             span.textContent = 'Mode édition';
             const button = document.createElement('button');
-            button.textContent = 'Publier les changements';
             button.textContent = 'Publier les changements';
 
             // Ajoutez l'icône, le <span> et le bouton à l'élément div interne
@@ -157,20 +173,41 @@ document.addEventListener('DOMContentLoaded', function () {
 
             const modal = document.querySelector('.modal');
 
+            //afficher la modale
             modifier.addEventListener('click', function (e) {
                 e.preventDefault();
                 modal.style.display = null; // Set the display property to "block" to show the modal
             });
+            //cacher la modale
+            const closeModal = document.querySelector('.close-modal');
+            closeModal.addEventListener('click', function (e) {
+                e.preventDefault();
+                modal.style.display = "none"; // Set the display property to "block" to show the modal
+            });
 
 
+            console.log("travaux" + works)
+            //afficher la galerie dans la modale 
+            const modalGallery = document.getElementById('modal-gallery');
+            works.forEach(function (work) {
+                const figureElement = document.createElement("figure");
+                const imageElement = document.createElement("img");
+                imageElement.src = work.imageUrl;
+                const titleElement = document.createElement("figcaption");
+                titleElement.textContent = work.title;
+
+                modalGallery.appendChild(figureElement);
+                figureElement.appendChild(imageElement);
+                figureElement.appendChild(titleElement);
+            })
+
+
+
+            //retirer les filtres
             const filterBar = document.querySelector('.filter-bar');
             while (filterBar.firstChild) {
                 filterBar.removeChild(filterBar.firstChild);
             }
-
-
-
-
 
         } else {
             logBtn.textContent = "Login";
