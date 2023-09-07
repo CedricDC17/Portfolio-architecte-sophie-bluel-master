@@ -186,6 +186,9 @@ document.addEventListener('DOMContentLoaded', function () {
             span.textContent = 'Mode édition';
             const button = document.createElement('button');
             button.textContent = 'Publier les changements';
+            button.addEventListener('click', function(){
+                location.reload();
+            })
 
 
             innerDiv.appendChild(icon);
@@ -206,7 +209,8 @@ document.addEventListener('DOMContentLoaded', function () {
             h2Portfolio.appendChild(modifier)
 
             //afficher la modale
-            const modal = document.querySelector('.modal');
+            const modal = document.querySelector('#modal');
+
             modifier.addEventListener('click', function (e) {
                 e.preventDefault();
                 modal.style.display = null; // Set the display property to "block" to show the modal
@@ -217,6 +221,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 e.preventDefault();
                 modal.style.display = "none"; // Set the display property to "block" to show the modal
             });
+
 
             //retirer les filtres
             const filterBar = document.querySelector('.filter-bar');
