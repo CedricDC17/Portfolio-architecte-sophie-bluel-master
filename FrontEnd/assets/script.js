@@ -1,6 +1,7 @@
 document.addEventListener('DOMContentLoaded', function () {
 
     let works; // Declare works globally
+    let allWorks = [];
     let filtreObjets = [];
     let filtreApt = [];
     let filtreHR = [];
@@ -11,7 +12,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const token = localStorage.getItem('token');
 
 
-    
+
 
 
     if (currentUrl === "http://localhost:5678/") {
@@ -26,6 +27,7 @@ document.addEventListener('DOMContentLoaded', function () {
             console.log(works);
             //récuperer les travaux de chaques catégories
             works.forEach(work => {
+                allWorks.push(work)
                 if (work.categoryId === 1) {
                     filtreObjets.push(work);
                 }
@@ -50,29 +52,63 @@ document.addEventListener('DOMContentLoaded', function () {
 
             //afficher la galerie dans la modale 
             const modalGallery = document.getElementById('modal-gallery');
-            works.forEach(function (work) {
-                const figureElement = document.createElement("figure");
-                const imageElement = document.createElement("img");
-                imageElement.classList.add('modal-img')
-                imageElement.src = work.imageUrl;
-                const iconDiv = document.createElement("div");
-                iconDiv.classList.add('trash');
-                const iconElement = document.createElement("i");
-                iconElement.textContent="Poubelle" 
-                const titleElement = document.createElement("figcaption");
-                // titleElement.textContent = "éditer";
-                
-                figureElement.appendChild(iconDiv);
-                iconDiv.appendChild(iconElement);
-                modalGallery.appendChild(figureElement);
-                figureElement.appendChild(imageElement);
-                figureElement.appendChild(titleElement);
-            })
 
+            affichageTravauxModale();
+
+            function affichageTravauxModale() {
+                works.forEach(function (work) {
+                    const figureElement = document.createElement("figure");
+                    figureElement.id = work.id
+                    const imageElement = document.createElement("img");
+                    imageElement.classList.add('modal-img')
+                    imageElement.src = work.imageUrl;
+                    const iconDiv = document.createElement("div");
+                    iconDiv.classList.add('trash');
+                    const iconElement = document.createElement("i");
+                    iconElement.textContent = "Poubelle"
+                    const titleElement = document.createElement("figcaption");
+                    // titleElement.textContent = "éditer";
+
+                    iconDiv.addEventListener('click', function (e) {
+                        e.preventDefault();
+                        const supprId = work.id;
+                        let apiUrl = "http://localhost:5678/api/works/"
+                        apiUrl += work.id;
+                        console.log(apiUrl)
+                        fetch(apiUrl, {
+                            method: 'DELETE',
+                            headers: {
+                                'Authorization': `Bearer ${token}`,
+                                'Accept': '*/*'
+                            }
+                        })
+                            .then(response => {
+                                if (response.ok) {
+                                    console.log('La suppression a réussi.');
+                                    while (figureElement.firstChild) {
+                                        figureElement.removeChild(figureElement.firstChild);
+                                    }
+                                    figureElement.remove();
+                                } else {
+                                    console.error('Erreur lors de la suppression.');
+                                }
+                            })
+                            .catch(error => {
+                                console.error('Erreur:', error);
+                            });
+                    });
+
+                    figureElement.appendChild(iconDiv);
+                    iconDiv.appendChild(iconElement);
+                    modalGallery.appendChild(figureElement);
+                    figureElement.appendChild(imageElement);
+                    figureElement.appendChild(titleElement);
+                })
+            }
             //afficher tous les travaux au chargement
             affichageTravaux(works);
 
-
+            //pour ne pas avoir d'erreur dans la console en amdin
             if (userID !== "1") {
                 //button qui appelle la fonction pour afficher la bonne catégorie de travaux
                 boutonFiltreObjets.addEventListener('click', function () {
