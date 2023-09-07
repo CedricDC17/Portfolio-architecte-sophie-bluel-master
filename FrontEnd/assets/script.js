@@ -77,10 +77,6 @@ document.addEventListener('DOMContentLoaded', function () {
                 affichageTravaux(works);
             })
 
-
-
-
-
             //supprime tous les travaux et les remplacent par une catégorie en paramètre
             function affichageTravaux(list) {
                 while (sectionGallery.firstChild) {
@@ -100,7 +96,7 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         });
 
-        console.log("L'id utilisateur est: " + userID + " et le token est:" + token)
+        console.log("L'id utilisateur est: " + userID + " et le token est: " + token)
         //smooth scroll
         const anchorLinks = document.querySelectorAll('a.anchor-link');
         anchorLinks.forEach(function (link) {
@@ -128,13 +124,10 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         })
 
+        //chargement de la page si mode admin
         if (userID === "1") {
+            //création des elements d'admin bar
             logBtn.textContent = "Logout";
-            // Créez un élément div avec la classe "admin-bar"
-            // Créez un élément div à l'intérieur de "admin-bar"
-            // Créez une icône <i> avec la classe "fa-solid fa-pen-to-square"
-            // Créez un élément <span> avec le texte "Mode édition"
-            // Créez un bouton avec le texte "Publier les changements"
             const adminBar = document.createElement('div');
             adminBar.classList.add('admin-bar');
             const innerDiv = document.createElement('div');
@@ -145,35 +138,26 @@ document.addEventListener('DOMContentLoaded', function () {
             const button = document.createElement('button');
             button.textContent = 'Publier les changements';
 
-            // Ajoutez l'icône, le <span> et le bouton à l'élément div interne
+            
             innerDiv.appendChild(icon);
             innerDiv.appendChild(span);
             innerDiv.appendChild(button);
-
-            // Ajoutez l'élément div interne à "admin-bar"
             adminBar.appendChild(innerDiv);
 
-            // Obtenez une référence à votre header
-            const header = document.querySelector('header'); // Vous devrez peut-être utiliser un sélecteur plus spécifique ici
-            header.style.marginTop = '100px';
 
-            // Insérez "admin-bar" au début du header
+            const header = document.querySelector('header');
+            header.style.marginTop = '100px';
             header.insertBefore(adminBar, header.firstChild);
 
             // ajouter le lien "modifier" qui ouvre la modale 
             const modifier = document.createElement('a');
             modifier.textContent = 'Modifier';
             modifier.href = "#modal";
-
             const h2Portfolio = document.querySelector('#portfolio h2');
             h2Portfolio.appendChild(modifier)
-            // h2Portfolio.insertAdjacentElement('afterend', modifier)
-
-
-
-            const modal = document.querySelector('.modal');
 
             //afficher la modale
+            const modal = document.querySelector('.modal');
             modifier.addEventListener('click', function (e) {
                 e.preventDefault();
                 modal.style.display = null; // Set the display property to "block" to show the modal
@@ -185,24 +169,6 @@ document.addEventListener('DOMContentLoaded', function () {
                 modal.style.display = "none"; // Set the display property to "block" to show the modal
             });
 
-
-            console.log("travaux" + works)
-            //afficher la galerie dans la modale 
-            const modalGallery = document.getElementById('modal-gallery');
-            works.forEach(function (work) {
-                const figureElement = document.createElement("figure");
-                const imageElement = document.createElement("img");
-                imageElement.src = work.imageUrl;
-                const titleElement = document.createElement("figcaption");
-                titleElement.textContent = work.title;
-
-                modalGallery.appendChild(figureElement);
-                figureElement.appendChild(imageElement);
-                figureElement.appendChild(titleElement);
-            })
-
-
-
             //retirer les filtres
             const filterBar = document.querySelector('.filter-bar');
             while (filterBar.firstChild) {
@@ -212,19 +178,15 @@ document.addEventListener('DOMContentLoaded', function () {
         } else {
             logBtn.textContent = "Login";
         }
-
     }
-
 
     //login page
     if (currentUrl === "http://localhost:5678/login") {
         const form = document.getElementById('login-form');
         form.addEventListener("submit", async (event) => {
             event.preventDefault();
-
             const email = document.getElementById("email").value;
             const password = document.getElementById("password").value;
-
             const data = {
                 email: email,
                 password: password
@@ -238,10 +200,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     },
                     body: JSON.stringify(data)
                 });
-
                 const result = await response.json();
-
-                // Assuming your response contains userId and token properties
                 const userId = result.userId;
                 const token = result.token;
 
@@ -264,8 +223,4 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         });
     }
-
-
-
-
 });
