@@ -418,4 +418,13 @@ h2 a {
 
 .modal-img {
 	width: 100px;
+	margin-bottom: 10px;
+}
+
+.trash{
+	display: flex;
+	justify-content: flex-end;
+}
+.trash i {
+position:absolute;
 }

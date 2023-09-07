@@ -11,6 +11,9 @@ document.addEventListener('DOMContentLoaded', function () {
     const token = localStorage.getItem('token');
 
 
+    
+
+
     if (currentUrl === "http://localhost:5678/") {
         async function logWorks() {
             let response = await fetch('http://localhost:5678/api/works');
@@ -52,9 +55,15 @@ document.addEventListener('DOMContentLoaded', function () {
                 const imageElement = document.createElement("img");
                 imageElement.classList.add('modal-img')
                 imageElement.src = work.imageUrl;
+                const iconDiv = document.createElement("div");
+                iconDiv.classList.add('trash');
+                const iconElement = document.createElement("i");
+                iconElement.textContent="Poubelle" 
                 const titleElement = document.createElement("figcaption");
-                titleElement.textContent = "éditer";
-
+                // titleElement.textContent = "éditer";
+                
+                figureElement.appendChild(iconDiv);
+                iconDiv.appendChild(iconElement);
                 modalGallery.appendChild(figureElement);
                 figureElement.appendChild(imageElement);
                 figureElement.appendChild(titleElement);
@@ -63,19 +72,22 @@ document.addEventListener('DOMContentLoaded', function () {
             //afficher tous les travaux au chargement
             affichageTravaux(works);
 
-            //button qui appelle la fonction pour afficher la bonne catégorie de travaux
-            boutonFiltreObjets.addEventListener('click', function () {
-                affichageTravaux(filtreObjets);
-            })
-            boutonFiltreApt.addEventListener('click', function () {
-                affichageTravaux(filtreApt);
-            })
-            boutonFiltreHR.addEventListener('click', function () {
-                affichageTravaux(filtreHR);
-            })
-            boutonTous.addEventListener('click', function () {
-                affichageTravaux(works);
-            })
+
+            if (userID !== "1") {
+                //button qui appelle la fonction pour afficher la bonne catégorie de travaux
+                boutonFiltreObjets.addEventListener('click', function () {
+                    affichageTravaux(filtreObjets);
+                })
+                boutonFiltreApt.addEventListener('click', function () {
+                    affichageTravaux(filtreApt);
+                })
+                boutonFiltreHR.addEventListener('click', function () {
+                    affichageTravaux(filtreHR);
+                })
+                boutonTous.addEventListener('click', function () {
+                    affichageTravaux(works);
+                })
+            }
 
             //supprime tous les travaux et les remplacent par une catégorie en paramètre
             function affichageTravaux(list) {
@@ -120,6 +132,7 @@ document.addEventListener('DOMContentLoaded', function () {
         logBtn.addEventListener('click', function () {
             if (userID === "1") {
                 localStorage.removeItem('userId');
+                localStorage.removeItem('token');
                 logBtn.href = "/";
             }
         })
@@ -138,7 +151,7 @@ document.addEventListener('DOMContentLoaded', function () {
             const button = document.createElement('button');
             button.textContent = 'Publier les changements';
 
-            
+
             innerDiv.appendChild(icon);
             innerDiv.appendChild(span);
             innerDiv.appendChild(button);
