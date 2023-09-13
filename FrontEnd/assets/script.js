@@ -207,7 +207,8 @@ document.addEventListener('DOMContentLoaded', async function () {
                 if (data.id && data.imageUrl) {
                     modal2.style.display = "none";
                     modal.style.display = null;
-                    afficherNouveauTravail(data);
+                    afficherNouveauTravailModale(data);
+                    afficherNouveauTravailAcceuil(data);
                 }
             }
         });
@@ -310,7 +311,8 @@ document.addEventListener('DOMContentLoaded', async function () {
         })
     }
 
-    function afficherNouveauTravail(e) {
+    function afficherNouveauTravailModale(e) {
+        //afficher dans la modale
         const figureElement = document.createElement("figure");
         figureElement.id = e.id;
         const imageElement = document.createElement("img");
@@ -321,41 +323,54 @@ document.addEventListener('DOMContentLoaded', async function () {
         const iconElement = document.createElement("i");
         iconElement.textContent = "Poubelle";
         iconDiv.appendChild(iconElement);
-    
+
         iconDiv.addEventListener('click', async function (event) {
             event.preventDefault();
             const apiUrl = `http://localhost:5678/api/works/${e.id}`;
-    
+
             const response = await fetch(apiUrl, {
                 method: 'DELETE',
                 headers: {
                     'Authorization': `Bearer ${token}`,
                 }
             });
-    
+
             if (response.ok) {
                 console.log('La suppression a réussi.');
                 const removedWork = document.querySelector('.work' + e.id);
-    
+
                 while (figureElement.firstChild) {
                     figureElement.firstChild.remove();
                 }
-    
+
                 while (removedWork.firstChild) {
                     removedWork.firstChild.remove();
                 }
-    
+
                 figureElement.remove();
                 removedWork.remove();
             } else {
                 console.error('Erreur lors de la suppression.');
             }
         });
-    
+
         figureElement.appendChild(iconDiv);
         figureElement.appendChild(imageElement);
         modalGallery.appendChild(figureElement);
     }
-    
 
+    function afficherNouveauTravailAcceuil(e) {
+
+        //afficher sur la page d'acceuil
+        const figureElement = document.createElement("figure");
+        figureElement.classList.add('work' + e.id)
+        const imageElement = document.createElement("img");
+        imageElement.src = e.imageUrl;
+        const titleElement = document.createElement("figcaption");
+        titleElement.textContent = e.title;
+
+        sectionGallery.appendChild(figureElement);
+        figureElement.appendChild(imageElement);
+        figureElement.appendChild(titleElement);
+    }
 });
