@@ -58,15 +58,15 @@ document.addEventListener('DOMContentLoaded', async function () {
         logout();
     }
 
-    affichageTravaux(works);    //afficher tous les travaux au chargement
+    affichageTravaux(works);
 
-    affichageTravauxModale();    //afficher les travaux dans la modale cachée
+    affichageTravauxModale();
 
-    loadPreview();    //charger la preview de la photo dans modale2
+    loadPreview();
 
-    modalForm();    // récuperer les données du formulaire de modal2
+    modalForm();
 
-    smoothScroll();    //smooth scroll
+    smoothScroll();
 
     async function logWorks() { //fonction qui envoie une requete à l'api pour récuprer tous les travaux
 
@@ -93,7 +93,7 @@ document.addEventListener('DOMContentLoaded', async function () {
         });
     }
 
-    function affichageTravauxModale() {
+    function affichageTravauxModale() {//afficher les travaux dans la modale cachée
         works.forEach(function (work) {
             const figureElement = document.createElement("figure");
             figureElement.id = work.id
@@ -148,7 +148,7 @@ document.addEventListener('DOMContentLoaded', async function () {
         })
     }
 
-    function loadPreview() {
+    function loadPreview() {//charger la preview de la photo dans modale2
 
 
         const photoInput = document.getElementById('photoInput');
@@ -181,17 +181,18 @@ document.addEventListener('DOMContentLoaded', async function () {
         });
     }
 
-    function modalForm() {
+    function modalForm() {// récuperer les données du formulaire de modal2
         const form = document.querySelector('.new-photo-form');
         form.addEventListener('submit', async (e) => {
             e.preventDefault();
 
-            const { files, value: titre } = document.getElementById('photoInput');
+            const { files } = document.getElementById('photoInput');
+            const titreInput = document.getElementById('titre').value;
             const categorie = document.getElementById('categorie').value;
 
             const formData = new FormData();
             formData.append('image', files[0]);
-            formData.append('title', titre);
+            formData.append('title', titreInput);
             formData.append('category', categorie);
 
             const response = await fetch('http://localhost:5678/api/works', {
@@ -214,7 +215,7 @@ document.addEventListener('DOMContentLoaded', async function () {
         });
     }
 
-    function smoothScroll() {
+    function smoothScroll() {//smooth scroll
         const anchorLinks = document.querySelectorAll('a.anchor-link');
         anchorLinks.forEach(function (link) {
             link.addEventListener('click', function (event) {
@@ -232,8 +233,7 @@ document.addEventListener('DOMContentLoaded', async function () {
         });
     }
 
-    function logout() {
-        //supprime userID du storage si =1 et recharge la page
+    function logout() { //si admin, logout supprime le token admin et recharge la page 
         logBtn.addEventListener('click', function () {
             if (userID === "1") {
                 localStorage.removeItem('userId');
@@ -243,7 +243,7 @@ document.addEventListener('DOMContentLoaded', async function () {
         })
     }
 
-    function adminMod() {
+    function adminMod() { //toutes les nouvelles fonctionnalités en mode admin
         //création des elements d'admin bar
         logBtn.textContent = "logout";
         const adminBar = document.createElement('div');
@@ -311,8 +311,7 @@ document.addEventListener('DOMContentLoaded', async function () {
         })
     }
 
-    function afficherNouveauTravailModale(e) {
-        //afficher dans la modale
+    function afficherNouveauTravailModale(e) {//afficher dans la modale
         const figureElement = document.createElement("figure");
         figureElement.id = e.id;
         const imageElement = document.createElement("img");
@@ -359,9 +358,7 @@ document.addEventListener('DOMContentLoaded', async function () {
         modalGallery.appendChild(figureElement);
     }
 
-    function afficherNouveauTravailAcceuil(e) {
-
-        //afficher sur la page d'acceuil
+    function afficherNouveauTravailAcceuil(e) {        //afficher sur la page d'acceuil
         const figureElement = document.createElement("figure");
         figureElement.classList.add('work' + e.id)
         const imageElement = document.createElement("img");
