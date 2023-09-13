@@ -3,6 +3,8 @@
 
 <head>
 	<meta charset="UTF-8">
+	<meta http-equiv="Content-Security-Policy"
+		content="script-src 'self' https://kit.fontawesome.com; script-src-elem 'self' https://kit.fontawesome.com">
 	<title>Sophie Bluel - Architecte d'intérieur</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<link rel="preconnect" href="https://fonts.googleapis.com">
@@ -12,8 +14,12 @@
 	<meta name="description" content="">
 	<link rel="stylesheet" href="./assets/style.css">
 	<script src="./assets/script.js"></script>
-	<script src="https://kit.fontawesome.com/54805684eb.js" crossorigin="anonymous"></script>	
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+		integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA=="
+		crossorigin="anonymous" referrerpolicy="no-referrer" />
+	<!-- <script src="https://kit.fontawesome.com/54805684eb.js" crossorigin="anonymous"></script> -->
 </head>
+
 
 <body>
 	<header>
@@ -45,16 +51,57 @@
 		</section>
 		<section id="portfolio">
 			<h2>Mes Projets</h2>
-			<aside id="modal" class="modal" aria-hidden="true" role="dialog" aria-modal="false" style="display: none;"> 
+			<aside id="modal" class="modal" aria-hidden="true" role="dialog" aria-modal="false" style="display: none;">
 				<div class="modal-wrapper">
-						<div id="close-modal" class="close-modal">Fermer X</div>
+					<div id="close-modal" class="close-modal">Fermer X</div>
 					<h1>Galerie photo</h1>
 					<div id="modal-gallery"></div>
 					<div style="width: 75%;border-top: solid 1px grey;"></div>
-					<button class="new-photo">Ajouter une photo</button>	
+					<button class="new-photo">Ajouter une photo</button>
 				</div>
 			</aside>
-			
+			<aside id="modal2" class="modal" aria-hidden="true" role="dialog" aria-modal="false" style="display:none;">
+				<div class="modal-wrapper">
+					<div id="close-modal" class="close-modal">Fermer X</div>
+					<h1>Ajouter photo</h1>
+					<div id="modal-new-work">
+						<form class="new-photo-form">
+							<div class="img-input-container">
+								<div class="new-file-text">
+									<i class="fa-regular fa-image"></i>
+
+									<input type="file" name="photo" id="photoInput" accept="image/*"
+										style="display: none;" required>
+									<button type="button" id="addPhotoButton">+ Ajouter photo</button>
+									<p>jpg, png : 4mo max</p>
+									<br>
+								</div>
+								<img id="photoPreview" src="" alt="Aperçu de la photo"
+									style="max-width: 300px; display: none;">
+							</div>
+
+							<br>
+							<label for="titre">Titre de la photo :</label>
+							<br>
+							<input class="form-input" type="text" name="titre" id="titre" required>
+							<br>
+							<label for="categorie">Catégorie de la photo :</label>
+							<br>
+							<select class="form-input" name="categorie" id="categorie" required>
+								<option value="1">Objets</option>
+								<option value="2">Appartements</option>
+								<option value="3">Hotels/Bars</option>
+							</select>
+
+							<div style="width: 100%;border-top: solid 1px grey; margin: 25px 0; align-self: center;">
+							</div>
+							<input type="submit" value="Ajouter la photo" style="justify-self: center;">
+						</form>
+					</div>
+
+				</div>
+			</aside>
+
 			<div class="filter-bar">
 				<button id="travaux">Tous</button>
 				<button id="objets">objets</button>
