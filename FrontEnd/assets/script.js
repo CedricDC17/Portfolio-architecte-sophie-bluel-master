@@ -21,6 +21,9 @@ document.addEventListener('DOMContentLoaded', async function () {
     const modalGallery = document.getElementById('modal-gallery');
     const modal2 = document.querySelector('#modal2')
     const modal = document.querySelector('#modal')
+    const photoPreview = document.getElementById('photoPreview');        
+    const newFileTxt = document.querySelector('.new-file-text')
+
 
     //met tous les travaux dans works
     works = await logWorks();
@@ -218,6 +221,9 @@ document.addEventListener('DOMContentLoaded', async function () {
                     if (data.id && data.imageUrl) {
                         modal2.style.display = "none";
                         modal.style.display = null;
+                        form.reset();
+                        photoPreview.style.display = 'none'
+                        newFileTxt.style.display= null
                         afficherNouveauTravailModale(data);
                         afficherNouveauTravailAcceuil(data);
                     }
@@ -230,9 +236,7 @@ document.addEventListener('DOMContentLoaded', async function () {
 
 
         const photoInput = document.getElementById('photoInput');
-        const newFileTxt = document.querySelector('.new-file-text')
         const addPhotoButton = document.getElementById('addPhotoButton');
-        const photoPreview = document.getElementById('photoPreview');
 
         //déclenche un clic sur photoInputquand l'image ou le bouton est click
         addPhotoButton.addEventListener('click', function () {
