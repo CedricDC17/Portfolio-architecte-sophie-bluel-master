@@ -3,6 +3,8 @@ document.addEventListener('DOMContentLoaded', async function () {
     let works;
     const userID = localStorage.getItem('userId');
     const token = localStorage.getItem('token');
+
+    console.log(userID);
     console.log(token);
 
     //récupère les boutons du html
@@ -22,7 +24,6 @@ document.addEventListener('DOMContentLoaded', async function () {
 
     //met tous les travaux dans works
     works = await logWorks();
-    console.log(works);
 
     //création de listes de travaux triées par catégories
     const filtreObjets = works.filter(work => {
@@ -36,23 +37,29 @@ document.addEventListener('DOMContentLoaded', async function () {
     });
 
     //ajout des filtres aux boutons
-    if (userID !== "1") {    //pour ne pas avoir d'erreur dans la console en amdin
+    activerBouton(boutonTous);
+    if (!userID) {    //pour ne pas avoir d'erreur dans la console en amdin
         boutonFiltreObjets.addEventListener('click', function () {
+            activerBouton(boutonFiltreObjets);
             affichageTravaux(filtreObjets);
-        })
+        });
+        
         boutonFiltreApt.addEventListener('click', function () {
+            activerBouton(boutonFiltreApt);
             affichageTravaux(filtreApt);
-        })
+        });
+        
         boutonFiltreHR.addEventListener('click', function () {
+            activerBouton(boutonFiltreHR);
             affichageTravaux(filtreHR);
-        })
+        });
+        
         boutonTous.addEventListener('click', function () {
+            activerBouton(boutonTous);
             affichageTravaux(works);
-        })
+        });
     }
-
-    //chargement de la page et toutes les fonctions du mode admin
-    if (userID === "1") {
+    else {    //chargement de la page et toutes les fonctions du mode admin
         adminMod();
         //remplace login par logout si mode admin
         logout();
@@ -76,9 +83,7 @@ document.addEventListener('DOMContentLoaded', async function () {
     }
 
     function affichageTravaux(list) { //suppr tous les travaux et affichent ceux du filtre en paramètre
-        while (sectionGallery.firstChild) {
-            sectionGallery.removeChild(sectionGallery.firstChild);
-        }
+        sectionGallery.innerHTML = "";
         list.forEach(work => {
             const figureElement = document.createElement("figure");
             figureElement.classList.add('work' + work.id)
@@ -93,7 +98,7 @@ document.addEventListener('DOMContentLoaded', async function () {
         });
     }
 
-    function affichageTravauxModale() {//afficher les travaux dans la modale cachée
+    function affichageTravauxModale() { //afficher les travaux dans la modale cachée
         works.forEach(function (work) {
             const figureElement = document.createElement("figure");
             figureElement.id = work.id
@@ -103,7 +108,7 @@ document.addEventListener('DOMContentLoaded', async function () {
             const iconDiv = document.createElement("div");
             iconDiv.classList.add('trash');
             const iconElement = document.createElement("i");
-            iconElement.textContent = "Poubelle"
+            iconElement.classList.add('fa-solid', 'fa-trash');
 
             iconDiv.addEventListener('click', function (e) {
                 e.preventDefault();
@@ -148,7 +153,80 @@ document.addEventListener('DOMContentLoaded', async function () {
         })
     }
 
-    function loadPreview() {//charger la preview de la photo dans modale2
+    function smoothScroll() { //smooth scroll
+        const anchorLinks = document.querySelectorAll('a.anchor-link');
+        anchorLinks.forEach(function (link) {
+            link.addEventListener('click', function (event) {
+                event.preventDefault();
+                const targetId = link.getAttribute('href');
+                const targetElement = document.querySelector(targetId);
+
+                if (targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+    }
+
+    function logout() { //si admin, logout supprime le token admin et recharge la page 
+        logBtn.addEventListener('click', function () {
+            if (userID === "1") {
+                localStorage.removeItem('userId');
+                localStorage.removeItem('token');
+                logBtn.href = "/";
+            }
+        })
+    }
+
+    function modalForm() { // récuperer les données du formulaire de modal2
+        const form = document.querySelector('.new-photo-form');
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const { files } = document.getElementById('photoInput');
+            const titreInput = document.getElementById('titre').value;
+            const categorie = document.getElementById('categorie').value;
+
+            const formData = new FormData();
+
+
+
+            formData.append('image', files[0]);
+            formData.append('title', titreInput);
+            formData.append('category', categorie);
+
+
+            const imageError = document.getElementById('imageError');
+            if (files.length === 0 || files[0].size === 0) {
+                imageError.style.display = 'block';
+                return;
+            }
+            else {
+                const response = await fetch('http://localhost:5678/api/works', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                    },
+                    body: formData,
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    if (data.id && data.imageUrl) {
+                        modal2.style.display = "none";
+                        modal.style.display = null;
+                        afficherNouveauTravailModale(data);
+                        afficherNouveauTravailAcceuil(data);
+                    }
+                }
+            }
+        });
+    }
+
+    function loadPreview() { //charger la preview de la photo dans modale2
 
 
         const photoInput = document.getElementById('photoInput');
@@ -181,137 +259,7 @@ document.addEventListener('DOMContentLoaded', async function () {
         });
     }
 
-    function modalForm() {// récuperer les données du formulaire de modal2
-        const form = document.querySelector('.new-photo-form');
-        form.addEventListener('submit', async (e) => {
-            e.preventDefault();
-
-            const { files } = document.getElementById('photoInput');
-            const titreInput = document.getElementById('titre').value;
-            const categorie = document.getElementById('categorie').value;
-
-            const formData = new FormData();
-            formData.append('image', files[0]);
-            formData.append('title', titreInput);
-            formData.append('category', categorie);
-
-            const response = await fetch('http://localhost:5678/api/works', {
-                method: 'POST',
-                headers: {
-                    'Authorization': `Bearer ${token}`,
-                },
-                body: formData,
-            });
-
-            if (response.ok) {
-                const data = await response.json();
-                if (data.id && data.imageUrl) {
-                    modal2.style.display = "none";
-                    modal.style.display = null;
-                    afficherNouveauTravailModale(data);
-                    afficherNouveauTravailAcceuil(data);
-                }
-            }
-        });
-    }
-
-    function smoothScroll() {//smooth scroll
-        const anchorLinks = document.querySelectorAll('a.anchor-link');
-        anchorLinks.forEach(function (link) {
-            link.addEventListener('click', function (event) {
-                event.preventDefault();
-                const targetId = link.getAttribute('href');
-                const targetElement = document.querySelector(targetId);
-
-                if (targetElement) {
-                    window.scrollTo({
-                        top: targetElement.offsetTop,
-                        behavior: 'smooth'
-                    });
-                }
-            });
-        });
-    }
-
-    function logout() { //si admin, logout supprime le token admin et recharge la page 
-        logBtn.addEventListener('click', function () {
-            if (userID === "1") {
-                localStorage.removeItem('userId');
-                localStorage.removeItem('token');
-                logBtn.href = "/";
-            }
-        })
-    }
-
-    function adminMod() { //toutes les nouvelles fonctionnalités en mode admin
-        //création des elements d'admin bar
-        logBtn.textContent = "logout";
-        const adminBar = document.createElement('div');
-        adminBar.classList.add('admin-bar');
-        const innerDiv = document.createElement('div');
-        const icon = document.createElement('i');
-        icon.classList.add('fa-solid', 'fa-pen-to-square');
-        const span = document.createElement('span');
-        span.textContent = 'Mode édition';
-        const button = document.createElement('button');
-        button.textContent = 'Publier les changements';
-        button.addEventListener('click', function () {
-            location.reload();
-        })
-
-        //affichage admin bar
-        innerDiv.appendChild(icon);
-        innerDiv.appendChild(span);
-        innerDiv.appendChild(button);
-        adminBar.appendChild(innerDiv);
-
-        //mettre de la margin au header et mettre la barre admin au début du header
-        const header = document.querySelector('header');
-        header.style.marginTop = '100px';
-        header.insertBefore(adminBar, header.firstChild);
-
-        // ajouter le lien "modifier" qui ouvre la modale 
-        const modifier = document.createElement('a');
-        modifier.textContent = 'Modifier';
-        modifier.href = "#modal";
-        const h2Portfolio = document.querySelector('#portfolio h2');
-        h2Portfolio.appendChild(modifier)
-
-        //afficher la modale
-        const modal = document.querySelector('#modal');
-
-        modifier.addEventListener('click', function (e) {
-            e.preventDefault();
-            modal.style.display = null;
-        });
-
-        // Cacher les modales
-        const closeModals = document.querySelectorAll('.close-modal');
-        closeModals.forEach(function (closeModal) {
-            closeModal.addEventListener('click', function (e) {
-                e.preventDefault();
-                modal.style.display = "none";
-                modal2.style.display = "none";
-            });
-        });
-
-        //retirer les filtres
-        const filterBar = document.querySelector('.filter-bar');
-        while (filterBar.firstChild) {
-            filterBar.removeChild(filterBar.firstChild);
-        }
-
-        //bouton nouveau travail modal1
-        const newPhotoBtn = document.querySelector('.new-photo')
-        newPhotoBtn.addEventListener('click', function (e) {
-            e.preventDefault();
-            modal.style.display = "none";
-            modal2.style.display = null;
-
-        })
-    }
-
-    function afficherNouveauTravailModale(e) {//afficher dans la modale
+    function afficherNouveauTravailModale(e) { //afficher dans la modale
         const figureElement = document.createElement("figure");
         figureElement.id = e.id;
         const imageElement = document.createElement("img");
@@ -320,7 +268,7 @@ document.addEventListener('DOMContentLoaded', async function () {
         const iconDiv = document.createElement("div");
         iconDiv.classList.add('trash');
         const iconElement = document.createElement("i");
-        iconElement.textContent = "Poubelle";
+        iconElement.classList.add('fa-solid', 'fa-trash');
         iconDiv.appendChild(iconElement);
 
         iconDiv.addEventListener('click', async function (event) {
@@ -358,7 +306,7 @@ document.addEventListener('DOMContentLoaded', async function () {
         modalGallery.appendChild(figureElement);
     }
 
-    function afficherNouveauTravailAcceuil(e) {        //afficher sur la page d'acceuil
+    function afficherNouveauTravailAcceuil(e) { //afficher sur la page d'acceuil
         const figureElement = document.createElement("figure");
         figureElement.classList.add('work' + e.id)
         const imageElement = document.createElement("img");
@@ -370,4 +318,118 @@ document.addEventListener('DOMContentLoaded', async function () {
         figureElement.appendChild(imageElement);
         figureElement.appendChild(titleElement);
     }
+
+    function activerBouton(bouton) {
+        // Désactivez tous les boutons
+        boutonFiltreObjets.classList.remove('actif');
+        boutonFiltreApt.classList.remove('actif');
+        boutonFiltreHR.classList.remove('actif');
+        boutonTous.classList.remove('actif');
+    
+        // Activez le bouton spécifié
+        bouton.classList.add('actif');
+    }
+
+    function adminMod() {
+        createAdminBar();
+        removeFilters();
+        addEditLink();
+        closeModal();
+        openModal2();
+    }
+
+    function createAdminBar() { //afficher la barre d'administration
+        logBtn.textContent = "logout";
+        const adminBar = document.createElement('div');
+        adminBar.classList.add('admin-bar');
+        const innerDiv = document.createElement('div');
+        const icon = document.createElement('i');
+        icon.classList.add('fa-solid', 'fa-pen-to-square');
+        const span = document.createElement('span');
+        span.textContent = 'Mode édition';
+        const button = document.createElement('button');
+        button.textContent = 'Publier les changements';
+        button.addEventListener('click', function () {
+            location.reload();
+        });
+
+        // Affichage de la barre d'administration
+        innerDiv.appendChild(icon);
+        innerDiv.appendChild(span);
+        innerDiv.appendChild(button);
+        adminBar.appendChild(innerDiv);
+
+        const header = document.querySelector('header');
+        header.style.marginTop = '100px';
+        header.insertBefore(adminBar, header.firstChild);
+    }
+
+    function addEditLink() { //ajouter le lien "Modifier" qui ouvre la modale
+        const h2Portfolio = document.querySelector('#portfolio h2');
+        const modifier = document.createElement('a');
+        modifier.href = "#modal";
+        const icon = document.createElement('i');
+        icon.classList.add('fa-solid', 'fa-pen-to-square');
+        modifier.appendChild(icon);
+        modifier.appendChild(document.createTextNode(' Modifier'));
+
+        h2Portfolio.appendChild(modifier);
+
+        modifier.addEventListener('click', function (e) {
+            e.preventDefault();
+            modal.style.display = null;
+        });
+    }
+
+    function closeModal() { //cacher les modales
+        const closeModals = document.querySelectorAll('.close-modal');
+
+        // modal.addEventListener('click', function (e) {
+        //     e.preventDefault();
+        //     if (e.target === modal) {
+        //         modal.style.display = "none";
+        //         modal2.style.display = "none";
+        //     }
+        // });
+
+        // modal2.addEventListener('click', function (e) {
+        //     e.preventDefault();
+        //     if (e.target === modal2) {
+        //         modal.style.display = "none";
+        //         modal2.style.display = "none";
+        //     }
+        // });
+
+        closeModals.forEach(function (closeModal) {
+            closeModal.addEventListener('click', function (e) {
+                e.preventDefault();
+                modal.style.display = "none";
+                modal2.style.display = "none";
+            });
+        });
+
+
+
+        const backButton = document.getElementById('back-button');
+        backButton.addEventListener('click', function (e) {
+            e.preventDefault();
+            modal.style.display = null;
+            modal2.style.display = "none";
+        });
+    }
+
+    function removeFilters() { //retirer les filtres
+        const filterBar = document.querySelector('.filter-bar');
+        filterBar.innerHTML = ''
+    }
+
+    function openModal2() { //ouverture de la modale2
+        const newPhotoBtn = document.querySelector('.new-photo')
+        newPhotoBtn.addEventListener('click', function (e) {
+            e.preventDefault();
+            modal.style.display = "none";
+            modal2.style.display = null;
+        });
+    }
+    
 });
