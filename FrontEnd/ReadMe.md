@@ -4,6 +4,6 @@ A l'aide du terminale, lancer la commande "npm install" pour installer les dépe
 
 Puis lancer "npm start" pour lancer le server.
 
-##Ensuite, aller sur: http://localhost:5678/
+## Ensuite, aller sur: http://localhost:5678/
 
 Le site est lancé.
