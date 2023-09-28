@@ -388,21 +388,19 @@ document.addEventListener('DOMContentLoaded', async function () {
     function closeModal() { //cacher les modales
         const closeModals = document.querySelectorAll('.close-modal');
 
-        // modal.addEventListener('click', function (e) {
-        //     e.preventDefault();
-        //     if (e.target === modal) {
-        //         modal.style.display = "none";
-        //         modal2.style.display = "none";
-        //     }
-        // });
+        modal.addEventListener('click', function (e) {
+            if (e.target === modal) {
+                modal.style.display = "none";
+                modal2.style.display = "none";
+            }
+        });
 
-        // modal2.addEventListener('click', function (e) {
-        //     e.preventDefault();
-        //     if (e.target === modal2) {
-        //         modal.style.display = "none";
-        //         modal2.style.display = "none";
-        //     }
-        // });
+        modal2.addEventListener('click', function (e) {
+            if (e.target === modal2) {
+                modal.style.display = "none";
+                modal2.style.display = "none";
+            }
+        });
 
         closeModals.forEach(function (closeModal) {
             closeModal.addEventListener('click', function (e) {
