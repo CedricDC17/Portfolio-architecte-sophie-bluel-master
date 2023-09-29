@@ -1,7 +1,7 @@
 document.addEventListener('DOMContentLoaded', async function () {
     //déclaration des variables globales
     let works;
-    const userID = localStorage.getItem('userId');
+    const userID = localStorage.getItem('userId'); 
     const token = localStorage.getItem('token');
 
     console.log(userID);
@@ -23,7 +23,6 @@ document.addEventListener('DOMContentLoaded', async function () {
     const modal = document.querySelector('#modal')
     const photoPreview = document.getElementById('photoPreview');        
     const newFileTxt = document.querySelector('.new-file-text')
-
 
     //met tous les travaux dans works
     works = await logWorks();
@@ -64,8 +63,6 @@ document.addEventListener('DOMContentLoaded', async function () {
     }
     else {    //chargement de la page et toutes les fonctions du mode admin
         adminMod();
-        //remplace login par logout si mode admin
-        logout();
     }
 
     affichageTravaux(works);
@@ -233,8 +230,6 @@ document.addEventListener('DOMContentLoaded', async function () {
     }
 
     function loadPreview() { //charger la preview de la photo dans modale2
-
-
         const photoInput = document.getElementById('photoInput');
         const addPhotoButton = document.getElementById('addPhotoButton');
 
@@ -335,6 +330,7 @@ document.addEventListener('DOMContentLoaded', async function () {
     }
 
     function adminMod() {
+        logout();
         createAdminBar();
         removeFilters();
         addEditLink();
@@ -388,21 +384,19 @@ document.addEventListener('DOMContentLoaded', async function () {
     function closeModal() { //cacher les modales
         const closeModals = document.querySelectorAll('.close-modal');
 
-        // modal.addEventListener('click', function (e) {
-        //     e.preventDefault();
-        //     if (e.target === modal) {
-        //         modal.style.display = "none";
-        //         modal2.style.display = "none";
-        //     }
-        // });
+        modal.addEventListener('click', function (e) {
+            if (e.target === modal) {
+                modal.style.display = "none";
+                modal2.style.display = "none";
+            }
+        });
 
-        // modal2.addEventListener('click', function (e) {
-        //     e.preventDefault();
-        //     if (e.target === modal2) {
-        //         modal.style.display = "none";
-        //         modal2.style.display = "none";
-        //     }
-        // });
+        modal2.addEventListener('click', function (e) {
+            if (e.target === modal2) {
+                modal.style.display = "none";
+                modal2.style.display = "none";
+            }
+        });
 
         closeModals.forEach(function (closeModal) {
             closeModal.addEventListener('click', function (e) {
