@@ -1,7 +1,7 @@
 document.addEventListener('DOMContentLoaded', async function () {
     //déclaration des variables globales
     let works;
-    const userID = localStorage.getItem('userId');
+    const userID = localStorage.getItem('userId'); 
     const token = localStorage.getItem('token');
 
     console.log(userID);
