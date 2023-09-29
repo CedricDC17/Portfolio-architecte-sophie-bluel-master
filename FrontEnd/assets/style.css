@@ -273,7 +273,8 @@ li:hover {
 	box-shadow: 0px 4px 14px rgba(0, 0, 0, 0.09);
 }
 
-input[type="submit"], .new-photo{
+input[type="submit"],
+.new-photo {
 	font-family: 'Syne';
 	font-weight: 700;
 	color: white;
@@ -532,15 +533,18 @@ h2 a {
 	line-height: normal;
 }
 
-.filter-bar .actif{
-	
+.filter-bar .actif {
+
 	background-color: #1D6154;
 	color: #fff;
-	
+
 	border: 1px solid #1D6154;
 }
 
-.trash i{
-	padding: 5px;
+.trash i {
+	padding: 3px;
+	margin: 2px;
 	cursor: pointer;
+	background-color: #FFF;
+	color: #000;
 }

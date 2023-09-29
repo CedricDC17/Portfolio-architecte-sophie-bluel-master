@@ -1,7 +1,7 @@
 document.addEventListener('DOMContentLoaded', async function () {
     //déclaration des variables globales
     let works;
-    const userID = localStorage.getItem('userId'); 
+    const userID = localStorage.getItem('userId');
     const token = localStorage.getItem('token');
 
     console.log(userID);
@@ -21,7 +21,7 @@ document.addEventListener('DOMContentLoaded', async function () {
     const modalGallery = document.getElementById('modal-gallery');
     const modal2 = document.querySelector('#modal2')
     const modal = document.querySelector('#modal')
-    const photoPreview = document.getElementById('photoPreview');        
+    const photoPreview = document.getElementById('photoPreview');
     const newFileTxt = document.querySelector('.new-file-text')
 
     //met tous les travaux dans works
@@ -45,17 +45,17 @@ document.addEventListener('DOMContentLoaded', async function () {
             activerBouton(boutonFiltreObjets);
             affichageTravaux(filtreObjets);
         });
-        
+
         boutonFiltreApt.addEventListener('click', function () {
             activerBouton(boutonFiltreApt);
             affichageTravaux(filtreApt);
         });
-        
+
         boutonFiltreHR.addEventListener('click', function () {
             activerBouton(boutonFiltreHR);
             affichageTravaux(filtreHR);
         });
-        
+
         boutonTous.addEventListener('click', function () {
             activerBouton(boutonTous);
             affichageTravaux(works);
@@ -183,6 +183,7 @@ document.addEventListener('DOMContentLoaded', async function () {
 
     function modalForm() { // récuperer les données du formulaire de modal2
         const form = document.querySelector('.new-photo-form');
+        inputCheck();
         form.addEventListener('submit', async (e) => {
             e.preventDefault();
 
@@ -220,7 +221,7 @@ document.addEventListener('DOMContentLoaded', async function () {
                         modal.style.display = null;
                         form.reset();
                         photoPreview.style.display = 'none'
-                        newFileTxt.style.display= null
+                        newFileTxt.style.display = null
                         afficherNouveauTravailModale(data);
                         afficherNouveauTravailAcceuil(data);
                     }
@@ -324,7 +325,7 @@ document.addEventListener('DOMContentLoaded', async function () {
         boutonFiltreApt.classList.remove('actif');
         boutonFiltreHR.classList.remove('actif');
         boutonTous.classList.remove('actif');
-    
+
         // Activez le bouton spécifié
         bouton.classList.add('actif');
     }
@@ -429,5 +430,36 @@ document.addEventListener('DOMContentLoaded', async function () {
             modal2.style.display = null;
         });
     }
-    
+
+    function inputCheck() {
+        const photoInput = document.getElementById('photoInput');
+        const titreInput = document.getElementById('titre');
+        const submitButton = document.querySelector('input[type="submit"]');
+        submitButton.style.backgroundColor = 'gray'
+        
+        photoInput.addEventListener('input', function () {
+            if (photoInput.value.trim() === '' || titreInput.value.trim() === '') {
+                submitButton.disabled = true;
+                submitButton.style.backgroundColor = 'gray'
+
+            } else {
+                submitButton.disabled = false;
+                submitButton.style.backgroundColor = '#1D6154'
+
+            }
+        });
+
+        titreInput.addEventListener('input', function () {
+            if (photoInput.value.trim() === '' || titreInput.value.trim() === '') {
+                submitButton.disabled = true;
+                submitButton.style.backgroundColor = 'gray'
+            } else {
+                submitButton.disabled = false;
+                submitButton.style.backgroundColor = '#1D6154'
+            }
+        });
+
+        submitButton.disabled = true;
+    }
+
 });
